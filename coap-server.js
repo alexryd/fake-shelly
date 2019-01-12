@@ -2,8 +2,37 @@ const coap = require('coap')
 const EventEmitter = require('eventemitter3')
 
 const COAP_MULTICAST_ADDRESS = '224.0.1.187'
+const GLOBAL_DEVID = '3332'
+const STATUS_VALIDITY = '3412'
+const STATUS_SERIAL = '3420'
 
 class CoapServer extends EventEmitter {
+  static registerOptions() {
+    if (CoapServer._optionsRegistered) {
+      return
+    }
+
+    coap.registerOption(
+      GLOBAL_DEVID,
+      str => Buffer.from(str),
+      buf => buf.toString()
+    )
+
+    coap.registerOption(
+      STATUS_VALIDITY,
+      str => Buffer.alloc(2).writeUInt16BE(parseInt(str), 0),
+      buf => buf.readUInt16BE(0)
+    )
+
+    coap.registerOption(
+      STATUS_SERIAL,
+      str => Buffer.alloc(2).writeUInt16BE(parseInt(str), 0),
+      buf => buf.readUInt16BE(0)
+    )
+
+    CoapServer._optionsRegistered = true
+  }
+
   constructor(device) {
     super()
 
@@ -14,6 +43,8 @@ class CoapServer extends EventEmitter {
     this._boundRequestHandler = this._requestHandler.bind(this)
     this._boundMulticastRequestHandler =
       this._multicastRequestHandler.bind(this)
+
+    CoapServer.registerOptions()
   }
 
   start() {
