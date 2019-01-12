@@ -1,0 +1,20 @@
+{
+  "name": "fake-shelly",
+  "version": "0.0.1",
+  "description": "Simulates Shelly devices",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "shelly",
+    "http",
+    "coap"
+  ],
+  "author": "Alexander Rydén",
+  "license": "MIT",
+  "dependencies": {
+    "coap": "^0.22.0",
+    "eventemitter3": "^3.1.0"
+  }
+}
