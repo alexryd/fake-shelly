@@ -67,6 +67,16 @@ class Shelly2 extends Device {
     this._powerMeter0 = newValue
     this.emit('change:powerMeter0', newValue, oldValue, this)
   }
+
+  getCoapStatusPayload() {
+    return {
+      G: [
+        [ 0, 112, Number(this._relay0) ],
+        [ 0, 122, Number(this._relay1) ],
+        [ 0, 111, this._powerMeter0 ],
+      ],
+    }
+  }
 }
 
 module.exports = {

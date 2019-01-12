@@ -6,6 +6,21 @@ const GLOBAL_DEVID = '3332'
 const STATUS_VALIDITY = '3412'
 const STATUS_SERIAL = '3420'
 
+const setUriPath = (res, uri) => {
+  const parts = uri.split('/')
+  const buffers = []
+
+  for (const p of parts) {
+    if (p) {
+      buffers.push(Buffer.from(p))
+    }
+  }
+
+  if (buffers.length > 0) {
+    res.setOption('Uri-Path', buffers)
+  }
+}
+
 class CoapServer extends EventEmitter {
   static registerOptions() {
     if (CoapServer._optionsRegistered) {
@@ -20,13 +35,21 @@ class CoapServer extends EventEmitter {
 
     coap.registerOption(
       STATUS_VALIDITY,
-      str => Buffer.alloc(2).writeUInt16BE(parseInt(str), 0),
+      str => {
+        const buf = Buffer.alloc(2)
+        buf.writeUInt16BE(parseInt(str), 0)
+        return buf
+      },
       buf => buf.readUInt16BE(0)
     )
 
     coap.registerOption(
       STATUS_SERIAL,
-      str => Buffer.alloc(2).writeUInt16BE(parseInt(str), 0),
+      str => {
+        const buf = Buffer.alloc(2)
+        buf.writeUInt16BE(parseInt(str), 0)
+        return buf
+      },
       buf => buf.readUInt16BE(0)
     )
 
@@ -39,10 +62,9 @@ class CoapServer extends EventEmitter {
     this.device = device
     this.server = null
     this.multicastServer = null
+    this._serial = 1
 
     this._boundRequestHandler = this._requestHandler.bind(this)
-    this._boundMulticastRequestHandler =
-      this._multicastRequestHandler.bind(this)
 
     CoapServer.registerOptions()
   }
@@ -85,7 +107,7 @@ class CoapServer extends EventEmitter {
       this.multicastServer = coap.createServer({
         multicastAddress: COAP_MULTICAST_ADDRESS,
       })
-        .on('request', this._boundMulticastRequestHandler)
+        .on('request', this._boundRequestHandler)
         .listen(error => {
           if (!error) {
             resolve()
@@ -105,26 +127,34 @@ class CoapServer extends EventEmitter {
 
     if (this.multicastServer !== null) {
       this.multicastServer.close()
-      this.multicastServer.removeListener(
-        'request',
-        this._boundMulticastRequestHandler
-      )
+      this.multicastServer.removeListener('request', this._boundRequestHandler)
       this.multicastServer = null
     }
   }
 
   _requestHandler(req, res) {
-    console.log('Request received')
-    console.log(req.code)
-    console.log(req.method)
-    console.log(req.url)
+    try {
+      if (req.method === 'GET' && req.url === '/cit/s') {
+        this._handleStatusRequest(req, res)
+      }
+    } catch (e) {
+      console.error(e)
+      throw e
+    }
   }
 
-  _multicastRequestHandler(req, res) {
-    console.log('Multicast request received')
-    console.log(req.code)
-    console.log(req.method)
-    console.log(req.url)
+  _handleStatusRequest(req, res) {
+    console.log('GET /cit/s')
+
+    const d = this.device
+    const deviceId = `${d.type}#${d.id}#1`
+    const payload = JSON.stringify(this.device.getCoapStatusPayload())
+
+    setUriPath(res, '/cit/s')
+    res.setOption(GLOBAL_DEVID, deviceId)
+    res.setOption(STATUS_VALIDITY, 38400)
+    res.setOption(STATUS_SERIAL, this.serial++)
+    res.end(payload)
   }
 }
 
