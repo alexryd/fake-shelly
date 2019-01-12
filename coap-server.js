@@ -8,13 +8,44 @@ class CoapServer extends EventEmitter {
     super()
 
     this.device = device
+    this.server = null
     this.multicastServer = null
 
+    this._boundRequestHandler = this._requestHandler.bind(this)
     this._boundMulticastRequestHandler =
       this._multicastRequestHandler.bind(this)
   }
 
   start() {
+    return Promise.all([
+      this._startServer(),
+      this._startMulticastServer(),
+    ])
+      .catch(error => {
+        this.stop()
+        throw error
+      })
+  }
+
+  _startServer() {
+    if (this.server !== null) {
+      return Promise.resolve()
+    }
+
+    return new Promise((resolve, reject) => {
+      this.server = coap.createServer()
+        .on('request', this._boundRequestHandler)
+        .listen(error => {
+          if (!error) {
+            resolve()
+          } else {
+            reject(error)
+          }
+        })
+    })
+  }
+
+  _startMulticastServer() {
     if (this.multicastServer !== null) {
       return Promise.resolve()
     }
@@ -35,6 +66,12 @@ class CoapServer extends EventEmitter {
   }
 
   stop() {
+    if (this.server !== null) {
+      this.server.close()
+      this.server.removeListener('request', this._boundRequestHandler)
+      this.server = null
+    }
+
     if (this.multicastServer !== null) {
       this.multicastServer.close()
       this.multicastServer.removeListener(
@@ -45,8 +82,15 @@ class CoapServer extends EventEmitter {
     }
   }
 
-  _multicastRequestHandler(req, res) {
+  _requestHandler(req, res) {
     console.log('Request received')
+    console.log(req.code)
+    console.log(req.method)
+    console.log(req.url)
+  }
+
+  _multicastRequestHandler(req, res) {
+    console.log('Multicast request received')
     console.log(req.code)
     console.log(req.method)
     console.log(req.url)
