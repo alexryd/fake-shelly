@@ -15,6 +15,7 @@
   "license": "MIT",
   "dependencies": {
     "coap": "^0.22.0",
-    "eventemitter3": "^3.1.0"
+    "eventemitter3": "^3.1.0",
+    "restify": "^7.5.0"
   }
 }
