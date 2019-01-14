@@ -40,7 +40,7 @@ class Device extends EventEmitter {
   getCoapStatusPayload() {
     const updates = []
 
-    for (const [id, name] in this._props.entries()) {
+    for (const [id, name] of this._props.entries()) {
       let val = this[name]
       if (typeof val === 'boolean') {
         val = Number(val)
