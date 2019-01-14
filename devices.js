@@ -51,6 +51,29 @@ class Device extends EventEmitter {
 
     return { G: updates }
   }
+
+  setupHttpRoutes(server) {
+    server.get('/settings', this._handleSettingsRequest.bind(this))
+    server.get('/status', this._handleStatusRequest.bind(this))
+  }
+
+  _handleSettingsRequest(req, res, next) {
+    res.send(this._getHttpSettings())
+    next()
+  }
+
+  _getHttpSettings() {
+    return {}
+  }
+
+  _handleStatusRequest(req, res, next) {
+    res.send(this._getHttpStatus())
+    next()
+  }
+
+  _getHttpStatus() {
+    return {}
+  }
 }
 
 class Shelly2 extends Device {
@@ -70,7 +93,7 @@ class Shelly2 extends Device {
       })
   }
 
-  getHttpSettings() {
+  _getHttpSettings() {
     return {
       device: {
         type: this.type,
@@ -104,7 +127,7 @@ class Shelly2 extends Device {
     }
   }
 
-  getHttpStatus() {
+  _getHttpStatus() {
     return {
       relays: [
         {

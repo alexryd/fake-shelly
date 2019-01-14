@@ -22,7 +22,11 @@ class HttpServer extends EventEmitter {
         version: packageJson.version,
       })
 
-      this._setupRoutes(server)
+      server.on('pre', req => {
+        console.log(req.method, req.url)
+      })
+
+      this.device.setupHttpRoutes(server)
 
       server.listen(80, error => {
         if (!error) {
@@ -45,25 +49,6 @@ class HttpServer extends EventEmitter {
         resolve()
       })
     })
-  }
-
-  _setupRoutes(server) {
-    server.get('/settings', this._handleSettingsRequest.bind(this))
-    server.get('/status', this._handleStatusRequest.bind(this))
-  }
-
-  _handleSettingsRequest(req, res, next) {
-    console.log('GET /settings')
-
-    res.send(this.device.getHttpSettings())
-    next()
-  }
-
-  _handleStatusRequest(req, res, next) {
-    console.log('GET /status')
-
-    res.send(this.device.getHttpStatus())
-    next()
   }
 }
 
