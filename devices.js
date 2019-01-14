@@ -7,6 +7,49 @@ class Device extends EventEmitter {
     this.type = type
     this.id = id
     this.host = host
+    this._props = new Map()
+  }
+
+  _defineProperty(name, id = null, defaultValue = null, validator = null) {
+    const key = `_${name}`
+
+    Object.defineProperty(this, key, {
+      value: defaultValue,
+      writable: true,
+    })
+
+    Object.defineProperty(this, name, {
+      get() { return this[key] },
+      set(newValue) {
+        const nv = validator ? validator(newValue) : newValue
+        if (this[key] !== nv) {
+          const oldValue = this[key]
+          this[key] = nv
+          this.emit('change', name, nv, oldValue, this)
+          this.emit(`change:${name}`, nv, oldValue, this)
+        }
+      },
+      enumerable: true,
+    })
+
+    if (id !== null) {
+      this._props.set(id, name)
+    }
+  }
+
+  getCoapStatusPayload() {
+    const updates = []
+
+    for (const [id, name] in this._props.entries()) {
+      let val = this[name]
+      if (typeof val === 'boolean') {
+        val = Number(val)
+      }
+
+      updates.push([ 0, id, val ])
+    }
+
+    return { G: updates }
   }
 }
 
@@ -14,68 +57,17 @@ class Shelly2 extends Device {
   constructor(id, host) {
     super('SHSW-21', id, host)
 
-    this._relay0 = false
-    this._relay1 = false
-    this._powerMeter0 = 0
-  }
+    this._defineProperty('relay0', 112, false, Boolean)
+    this._defineProperty('relay1', 122, false, Boolean)
+    this._defineProperty('powerMeter0', 111, 0, Number)
 
-  get relay0() {
-    return this._relay0
-  }
-
-  set relay0(newValue) {
-    if (!!newValue === this._relay0) {
-      return
-    }
-
-    this._relay0 = !!newValue
-    this.emit('change:relay0', this._relay0, !this._relay0, this)
-
-    if (this._relay0) {
-      this.powerMeter0 = 8.43
-    }
-  }
-
-  get relay1() {
-    return this._relay1
-  }
-
-  set relay1(newValue) {
-    if (!!newValue === this._relay1) {
-      return
-    }
-
-    this._relay1 = !!newValue
-    this.emit('change:relay1', this._relay1, !this._relay1, this)
-
-    if (this._relay1) {
-      this.powerMeter0 = 12.05
-    }
-  }
-
-  get powerMeter0() {
-    return this._powerMeter0
-  }
-
-  set powerMeter0(newValue) {
-    if (newValue === this._powerMeter0) {
-      return
-    }
-
-    const oldValue = this._powerMeter0
-
-    this._powerMeter0 = newValue
-    this.emit('change:powerMeter0', newValue, oldValue, this)
-  }
-
-  getCoapStatusPayload() {
-    return {
-      G: [
-        [ 0, 112, Number(this._relay0) ],
-        [ 0, 122, Number(this._relay1) ],
-        [ 0, 111, this._powerMeter0 ],
-      ],
-    }
+    this
+      .on('change:relay0', newValue => {
+        this.powerMeter0 += newValue ? 8.43 : -8.43
+      })
+      .on('change:relay1', newValue => {
+        this.powerMeter0 += newValue ? 12.05 : -12.05
+      })
   }
 
   getHttpSettings() {
