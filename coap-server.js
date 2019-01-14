@@ -6,6 +6,8 @@ const GLOBAL_DEVID = '3332'
 const STATUS_VALIDITY = '3412'
 const STATUS_SERIAL = '3420'
 
+const getDeviceIdentifier = device => `${device.type}#${device.id}#1`
+
 const setUriPath = (res, uri) => {
   const parts = uri.split('/')
   const buffers = []
@@ -70,6 +72,8 @@ class CoapServer extends EventEmitter {
   }
 
   start() {
+    this.device.on('change', this._deviceChangeHandler, this)
+
     return Promise.all([
       this._startServer(),
       this._startMulticastServer(),
@@ -119,6 +123,8 @@ class CoapServer extends EventEmitter {
   }
 
   stop() {
+    this.device.removeListener('change', this._deviceChangeHandler, this)
+
     if (this.server !== null) {
       this.server.close()
       this.server.removeListener('request', this._boundRequestHandler)
@@ -130,6 +136,22 @@ class CoapServer extends EventEmitter {
       this.multicastServer.removeListener('request', this._boundRequestHandler)
       this.multicastServer = null
     }
+  }
+
+  _deviceChangeHandler() {
+    const req = coap.request({
+      host: COAP_MULTICAST_ADDRESS,
+      pathname: '/cit/s',
+      options: {
+        [GLOBAL_DEVID]: getDeviceIdentifier(this.device),
+        [STATUS_VALIDITY]: 38400,
+        [STATUS_SERIAL]: this._serial++,
+      },
+      multicast: true,
+      multicastTimeout: 100,
+    })
+    req.statusCode = '0.30'
+    req.end(JSON.stringify(this.device.getCoapStatusPayload()))
   }
 
   _requestHandler(req, res) {
@@ -146,15 +168,11 @@ class CoapServer extends EventEmitter {
   _handleStatusRequest(req, res) {
     console.log('GET /cit/s')
 
-    const d = this.device
-    const deviceId = `${d.type}#${d.id}#1`
-    const payload = JSON.stringify(this.device.getCoapStatusPayload())
-
     setUriPath(res, '/cit/s')
-    res.setOption(GLOBAL_DEVID, deviceId)
+    res.setOption(GLOBAL_DEVID, getDeviceIdentifier(this.device))
     res.setOption(STATUS_VALIDITY, 38400)
-    res.setOption(STATUS_SERIAL, this.serial++)
-    res.end(payload)
+    res.setOption(STATUS_SERIAL, this._serial++)
+    res.end(JSON.stringify(this.device.getCoapStatusPayload()))
   }
 }
 
