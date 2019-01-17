@@ -65,6 +65,7 @@ class CoapServer extends EventEmitter {
     this.server = null
     this.multicastServer = null
     this._serial = 1
+    this._statusBroadcastTimeout = null
 
     this._boundRequestHandler = this._requestHandler.bind(this)
 
@@ -73,6 +74,11 @@ class CoapServer extends EventEmitter {
 
   start() {
     this.device.on('change', this._deviceChangeHandler, this)
+
+    this._statusBroadcastTimeout = setTimeout(
+      this._broadcastStatus.bind(this),
+      15000
+    )
 
     return Promise.all([
       this._startServer(),
@@ -136,9 +142,23 @@ class CoapServer extends EventEmitter {
       this.multicastServer.removeListener('request', this._boundRequestHandler)
       this.multicastServer = null
     }
+
+    if (this._statusBroadcastTimeout !== null) {
+      clearTimeout(this._statusBroadcastTimeout)
+      this._statusBroadcastTimeout = null
+    }
   }
 
-  _deviceChangeHandler() {
+  _broadcastStatus() {
+    if (this._statusBroadcastTimeout !== null) {
+      clearTimeout(this._statusBroadcastTimeout)
+    }
+
+    this._statusBroadcastTimeout = setTimeout(
+      this._broadcastStatus.bind(this),
+      15000
+    )
+
     const req = coap.request({
       host: COAP_MULTICAST_ADDRESS,
       pathname: '/cit/s',
@@ -152,6 +172,10 @@ class CoapServer extends EventEmitter {
     })
     req.statusCode = '0.30'
     req.end(JSON.stringify(this.device.getCoapStatusPayload()))
+  }
+
+  _deviceChangeHandler() {
+    this._broadcastStatus()
   }
 
   _requestHandler(req, res) {
