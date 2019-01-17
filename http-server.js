@@ -22,6 +22,7 @@ class HttpServer extends EventEmitter {
         version: packageJson.version,
       })
 
+      server.use(restify.plugins.queryParser())
       server.on('pre', req => {
         console.log(req.method, req.url)
       })
