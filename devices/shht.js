@@ -1,8 +1,8 @@
 const { Device } = require('./base')
 
 class ShellyHT extends Device {
-  constructor(id, host) {
-    super('SHHT-1', id, host)
+  constructor(id) {
+    super('SHHT-1', id)
 
     this._defineProperty('temperature', 33, 25.8, Number)
     this._defineProperty('humidity', 44, 151, Number)

@@ -1,12 +1,11 @@
 const EventEmitter = require('eventemitter3')
 
 class Device extends EventEmitter {
-  constructor(type, id, host) {
+  constructor(type, id) {
     super()
 
     this.type = type
     this.id = id
-    this.host = host
     this._props = new Map()
   }
 

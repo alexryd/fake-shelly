@@ -1,8 +1,8 @@
 const { Device } = require('./base')
 
 class Shelly2 extends Device {
-  constructor(id, host) {
-    super('SHSW-21', id, host)
+  constructor(id) {
+    super('SHSW-21', id)
 
     this._defineProperty('relay0', 112, false, Boolean)
     this._defineProperty('relay1', 122, false, Boolean)
