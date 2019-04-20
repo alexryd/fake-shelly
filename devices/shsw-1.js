@@ -7,11 +7,8 @@ class Shelly1 extends Device {
     this._relay0Timeout = null
 
     this._defineProperty('relay0', 112, false, Boolean)
-  }
 
-  setupHttpRoutes(server) {
-    super.setupHttpRoutes(server)
-    server.get('/relay/0', this._handleRelay0Request.bind(this))
+    this._httpRoutes.set('/relay/0', this._handleRelay0Request)
   }
 
   _getHttpSettings() {

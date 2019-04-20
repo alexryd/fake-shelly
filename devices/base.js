@@ -9,6 +9,11 @@ class Device extends EventEmitter {
     this.id = id
     this.macAddress = '1A2B3C' + id
     this._props = new Map()
+    this._httpRoutes = new Map()
+
+    this._httpRoutes.set('/shelly', this._handleShellyRequest)
+    this._httpRoutes.set('/settings', this._handleSettingsRequest)
+    this._httpRoutes.set('/status', this._handleStatusRequest)
   }
 
   _defineProperty(name, id = null, defaultValue = null, validator = null) {
@@ -55,9 +60,9 @@ class Device extends EventEmitter {
   }
 
   setupHttpRoutes(server) {
-    server.get('/shelly', this._handleShellyRequest.bind(this))
-    server.get('/settings', this._handleSettingsRequest.bind(this))
-    server.get('/status', this._handleStatusRequest.bind(this))
+    for (const [path, handler] of this._httpRoutes.entries()) {
+      server.get(path, handler.bind(this))
+    }
   }
 
   _handleShellyRequest(req, res, next) {

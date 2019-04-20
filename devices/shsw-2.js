@@ -12,6 +12,8 @@ class Shelly2 extends Device {
     this.currentPosition = 0
     this._positionInterval = null
 
+    this._httpRoutes.set('/roller/0', this._handleRollerRequest)
+
     this
       .on('change:relay0', newValue => {
         this.powerMeter0 += newValue ? 8.43 : -8.43
@@ -86,11 +88,6 @@ class Shelly2 extends Device {
         this.currentState = 'stop'
       }
     }, 100)
-  }
-
-  setupHttpRoutes(server) {
-    super.setupHttpRoutes(server)
-    server.get('/roller/0', this._handleRollerRequest.bind(this))
   }
 
   _getHttpSettings() {
