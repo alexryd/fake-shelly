@@ -5,7 +5,7 @@ class ShellyHT extends Device {
     super('SHHT-1', id)
 
     this._defineProperty('temperature', 33, 25.8, Number)
-    this._defineProperty('humidity', 44, 151, Number)
+    this._defineProperty('humidity', 44, 51, Number)
     this._defineProperty('battery', 77, 97, Number)
   }
 
