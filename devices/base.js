@@ -110,6 +110,4 @@ class Device extends EventEmitter {
   }
 }
 
-module.exports = {
-  Device,
-}
+module.exports = Device
