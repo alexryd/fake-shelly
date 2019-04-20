@@ -24,6 +24,7 @@ class Device extends EventEmitter {
         if (this[key] !== nv) {
           const oldValue = this[key]
           this[key] = nv
+          console.log(name, 'changed from', oldValue, 'to', nv)
           this.emit('change', name, nv, oldValue, this)
           this.emit(`change:${name}`, nv, oldValue, this)
         }
