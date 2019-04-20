@@ -14,6 +14,17 @@ class Shelly1 extends Device {
     server.get('/relay/0', this._handleRelay0Request.bind(this))
   }
 
+  _getHttpStatus() {
+    return Object.assign(
+      {
+        relays: [
+          this._getRelay0HttpStatus(),
+        ],
+      },
+      super._getHttpStatus()
+    )
+  }
+
   _handleRelay0Request(req, res, next) {
     if (req.query && req.query.turn) {
       const turn = req.query.turn
@@ -31,11 +42,15 @@ class Shelly1 extends Device {
       }
     }
 
-    res.send({
+    res.send(this._getRelay0HttpStatus())
+    next()
+  }
+
+  _getRelay0HttpStatus() {
+    return {
       ison: this.relay0,
       has_timer: this._relay0Timeout !== null,
-    })
-    next()
+    }
   }
 }
 

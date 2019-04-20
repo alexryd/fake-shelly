@@ -128,24 +128,27 @@ class Shelly2 extends Device {
   }
 
   _getHttpStatus() {
-    return {
-      relays: [
-        {
-          ison: this.relay0,
-        },
-        {
-          ison: this.relay1,
-        },
-      ],
-      rollers: [
-        this._getHttpRollerStatus(),
-      ],
-      meters: [
-        {
-          power: this.powerMeter0,
-        },
-      ],
-    }
+    return Object.assign(
+      {
+        relays: [
+          {
+            ison: this.relay0,
+          },
+          {
+            ison: this.relay1,
+          },
+        ],
+        rollers: [
+          this._getHttpRollerStatus(),
+        ],
+        meters: [
+          {
+            power: this.powerMeter0,
+          },
+        ],
+      },
+      super._getHttpStatus()
+    )
   }
 
   _handleRollerRequest(req, res, next) {

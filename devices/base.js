@@ -1,4 +1,5 @@
 const EventEmitter = require('eventemitter3')
+const os = require('os')
 
 class Device extends EventEmitter {
   constructor(type, id) {
@@ -72,7 +73,13 @@ class Device extends EventEmitter {
   }
 
   _getHttpStatus() {
-    return {}
+    return {
+      time: new Date().toTimeString().substr(0, 5),
+      has_update: false,
+      ram_total: os.totalmem(),
+      ram_free: os.freemem(),
+      uptime: Math.floor(process.uptime()),
+    }
   }
 }
 
