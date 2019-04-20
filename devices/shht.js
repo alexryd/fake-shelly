@@ -9,6 +9,23 @@ class ShellyHT extends Device {
     this._defineProperty('battery', 77, 97, Number)
   }
 
+  _getHttpSettings() {
+    return Object.assign(
+      {
+        sensors: {
+          temperature_threshold: 1,
+          temperature_unit: 'C',
+          humidity_threshold: 5,
+        },
+        sleep_mode: {
+          period: 3,
+          unit: 'h',
+        },
+      },
+      super._getHttpSettings()
+    )
+  }
+
   _getHttpStatus() {
     return Object.assign(
       {

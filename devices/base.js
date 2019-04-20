@@ -75,7 +75,17 @@ class Device extends EventEmitter {
   }
 
   _getHttpSettings() {
-    return {}
+    return {
+      device: {
+        type: this.type,
+        mac: this.macAddress,
+      },
+      login: {
+        enabled: false,
+      },
+      name: 'fake-shelly',
+      time: new Date().toTimeString().substr(0, 5),
+    }
   }
 
   _handleStatusRequest(req, res, next) {

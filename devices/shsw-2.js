@@ -94,37 +94,30 @@ class Shelly2 extends Device {
   }
 
   _getHttpSettings() {
-    return {
-      device: {
-        type: this.type,
-        mac: '000000ABC123',
-        hostname: 'shelly-ABC123',
-        num_outputs: 2,
-        num_meters: 1,
-        num_rollers: 1,
+    return Object.assign(
+      {
+        relays: [
+          {
+            ison: this.relay0,
+          },
+          {
+            ison: this.relay1,
+          },
+        ],
+        rollers: [
+          {
+            swap: false,
+            state: this.currentState,
+          },
+        ],
+        meters: [
+          {
+            power: this.powerMeter0,
+          },
+        ],
       },
-      name: 'fake-shelly',
-      mode: 'roller',
-      relays: [
-        {
-          ison: this.relay0,
-        },
-        {
-          ison: this.relay1,
-        },
-      ],
-      rollers: [
-        {
-          swap: false,
-          state: this.currentState,
-        },
-      ],
-      meters: [
-        {
-          power: this.powerMeter0,
-        },
-      ],
-    }
+      super._getHttpSettings()
+    )
   }
 
   _getHttpStatus() {

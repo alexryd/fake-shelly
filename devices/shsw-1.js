@@ -14,6 +14,25 @@ class Shelly1 extends Device {
     server.get('/relay/0', this._handleRelay0Request.bind(this))
   }
 
+  _getHttpSettings() {
+    return Object.assign(
+      {
+        relays: [
+          Object.assign(
+            {
+              default_state: 'off',
+              btn_type: 'toggle',
+              auto_on: 0,
+              auto_off: 0,
+            },
+            this._getRelay0HttpStatus()
+          )
+        ],
+      },
+      super._getHttpSettings()
+    )
+  }
+
   _getHttpStatus() {
     return Object.assign(
       {
