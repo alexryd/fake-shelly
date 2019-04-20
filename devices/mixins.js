@@ -1,4 +1,21 @@
 
+const powerMeter = (device, index, id) => {
+  device._defineProperty(`powerMeter${index}`, id, 0, Number)
+
+  const getHttpSettings = () => {
+    return getHttpStatus()
+  }
+  device[`_getPowerMeter${index}HttpSettings`] = getHttpSettings
+
+  const getHttpStatus = () => {
+    return {
+      power: device[`powerMeter${index}`],
+      is_valid: true,
+    }
+  }
+  device[`_getPowerMeter${index}HttpStatus`] = getHttpStatus
+}
+
 const relay = (device, index, id) => {
   device[`_relay${index}Timeout`] = null
 
@@ -52,5 +69,6 @@ const relay = (device, index, id) => {
 }
 
 module.exports = {
+  powerMeter,
   relay,
 }
