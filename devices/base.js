@@ -70,37 +70,43 @@ class Device extends EventEmitter {
   }
 
   _handleSettingsRequest(req, res, next) {
-    res.send(this._getHttpSettings())
+    res.send(Object.assign(
+      {
+        device: {
+          type: this.type,
+          mac: this.macAddress,
+        },
+        login: {
+          enabled: false,
+        },
+        name: 'fake-shelly',
+        time: new Date().toTimeString().substr(0, 5),
+      },
+      this._getHttpSettings()
+    ))
     next()
   }
 
   _getHttpSettings() {
-    return {
-      device: {
-        type: this.type,
-        mac: this.macAddress,
-      },
-      login: {
-        enabled: false,
-      },
-      name: 'fake-shelly',
-      time: new Date().toTimeString().substr(0, 5),
-    }
+    return {}
   }
 
   _handleStatusRequest(req, res, next) {
-    res.send(this._getHttpStatus())
+    res.send(Object.assign(
+      {
+        time: new Date().toTimeString().substr(0, 5),
+        has_update: false,
+        ram_total: os.totalmem(),
+        ram_free: os.freemem(),
+        uptime: Math.floor(process.uptime()),
+      },
+      this._getHttpStatus()
+    ))
     next()
   }
 
   _getHttpStatus() {
-    return {
-      time: new Date().toTimeString().substr(0, 5),
-      has_update: false,
-      ram_total: os.totalmem(),
-      ram_free: os.freemem(),
-      uptime: Math.floor(process.uptime()),
-    }
+    return {}
   }
 }
 

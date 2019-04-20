@@ -10,42 +10,36 @@ class ShellyHT extends Device {
   }
 
   _getHttpSettings() {
-    return Object.assign(
-      {
-        sensors: {
-          temperature_threshold: 1,
-          temperature_unit: 'C',
-          humidity_threshold: 5,
-        },
-        sleep_mode: {
-          period: 3,
-          unit: 'h',
-        },
+    return {
+      sensors: {
+        temperature_threshold: 1,
+        temperature_unit: 'C',
+        humidity_threshold: 5,
       },
-      super._getHttpSettings()
-    )
+      sleep_mode: {
+        period: 3,
+        unit: 'h',
+      },
+    }
   }
 
   _getHttpStatus() {
-    return Object.assign(
-      {
-        tmp: {
-          value: this.temperature,
-          units: 'C',
-          tC: this.temperature,
-          tF: this.temperature * 9 / 5 + 32,
-          is_valid: true,
-        },
-        hum: {
-          value: this.humidity,
-          is_valid: true,
-        },
-        bat: {
-          value: this.battery,
-        },
+    return {
+      tmp: {
+        value: this.temperature,
+        units: 'C',
+        tC: this.temperature,
+        tF: this.temperature * 9 / 5 + 32,
+        is_valid: true,
       },
-      super._getHttpStatus()
-    )
+      hum: {
+        value: this.humidity,
+        is_valid: true,
+      },
+      bat: {
+        value: this.battery,
+      },
+    }
   }
 }
 
