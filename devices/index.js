@@ -5,6 +5,7 @@ const Shelly4Pro = require('./shsw-44')
 const ShellyHT = require('./shht')
 const ShellyPlug = require('./shplg-1')
 const ShellyPlugS = require('./shplg2-1')
+const ShellySense = require('./shsen-1')
 
 const createDevice = (type, id) => {
   switch (type) {
@@ -14,6 +15,8 @@ const createDevice = (type, id) => {
       return new ShellyPlug(id)
     case 'SHPLG2-1':
       return new ShellyPlugS(id)
+    case 'SHSEN-1':
+      return new ShellySense(id)
     case 'SHSW-1':
       return new Shelly1(id)
     case 'SHSW-PM':
@@ -36,4 +39,5 @@ module.exports = {
   ShellyHT,
   ShellyPlug,
   ShellyPlugS,
+  ShellySense,
 }
