@@ -7,6 +7,7 @@ class Device extends EventEmitter {
 
     this.type = type
     this.id = id
+    this.macAddress = '1A2B3C' + id
     this._props = new Map()
   }
 
@@ -54,8 +55,18 @@ class Device extends EventEmitter {
   }
 
   setupHttpRoutes(server) {
+    server.get('/shelly', this._handleShellyRequest.bind(this))
     server.get('/settings', this._handleSettingsRequest.bind(this))
     server.get('/status', this._handleStatusRequest.bind(this))
+  }
+
+  _handleShellyRequest(req, res, next) {
+    res.send({
+      type: this.type,
+      mac: this.macAddress,
+      auth: false,
+    })
+    next()
   }
 
   _handleSettingsRequest(req, res, next) {
