@@ -1,4 +1,5 @@
 const Shelly1 = require('./shsw-1')
+const Shelly1PM = require('./shsw-pm')
 const Shelly2 = require('./shsw-2')
 const ShellyHT = require('./shht')
 const ShellyPlug = require('./shplg-1')
@@ -14,6 +15,8 @@ const createDevice = (type, id) => {
       return new ShellyPlugS(id)
     case 'SHSW-1':
       return new Shelly1(id)
+    case 'SHSW-PM':
+      return new Shelly1PM(id)
     case 'SHSW-21':
       return new Shelly2(id)
     default:
@@ -24,6 +27,7 @@ const createDevice = (type, id) => {
 module.exports = {
   createDevice,
   Shelly1,
+  Shelly1PM,
   Shelly2,
   ShellyHT,
   ShellyPlug,
