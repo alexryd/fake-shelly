@@ -23,6 +23,8 @@ try {
   return
 }
 
+console.log(`Simulating a ${device.type} with ID ${device.id}`)
+
 const coapServer = new CoapServer(device)
 const httpServer = new HttpServer(device)
 
