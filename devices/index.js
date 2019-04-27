@@ -1,6 +1,7 @@
 const Shelly1 = require('./shsw-1')
 const Shelly1PM = require('./shsw-pm')
 const Shelly2 = require('./shsw-2')
+const Shelly2Roller = require('./shsw-21-roller')
 const Shelly25Roller = require('./shsw-25-roller.js')
 const Shelly4Pro = require('./shsw-44')
 const ShellyHT = require('./shht')
@@ -24,6 +25,8 @@ const createDevice = (type, id) => {
       return new Shelly1PM(id)
     case 'SHSW-21':
       return new Shelly2(id)
+    case 'SHSW-21-ROLLER':
+      return new Shelly2Roller(id)
     case 'SHSW-25-ROLLER':
       return new Shelly25Roller(id)
     case 'SHSW-44':
@@ -38,6 +41,7 @@ module.exports = {
   Shelly1,
   Shelly1PM,
   Shelly2,
+  Shelly2Roller,
   Shelly25Roller,
   Shelly4Pro,
   ShellyHT,
