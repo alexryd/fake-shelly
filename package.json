@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Simulates Shelly devices",
   "main": "index.js",
-  "bin": "bin/index.js",
+  "bin": "bin/fake-shelly",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
