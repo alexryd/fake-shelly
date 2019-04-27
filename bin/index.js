@@ -2,9 +2,9 @@
 
 const commandLineArgs = require('command-line-args')
 
-const CoapServer = require('./coap-server')
-const HttpServer = require('./http-server')
-const { createDevice } = require('./devices')
+const CoapServer = require('../coap-server')
+const HttpServer = require('../http-server')
+const { createDevice } = require('../devices')
 
 const opts = commandLineArgs([
   { name: 'device', type: String, defaultValue: 'SHSW-1', defaultOption: true },
