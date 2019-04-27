@@ -7,7 +7,7 @@ const HttpServer = require('./http-server')
 const { createDevice } = require('./devices')
 
 const opts = commandLineArgs([
-  { name: 'device', type: String, defaultValue: 'SHHT-1', defaultOption: true },
+  { name: 'device', type: String, defaultValue: 'SHSW-1', defaultOption: true },
   { name: 'id', type: String, defaultValue: 'ABC123' },
 ])
 
