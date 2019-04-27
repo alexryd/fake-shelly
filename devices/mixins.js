@@ -16,7 +16,7 @@ const powerMeter = (device, index, id) => {
   device[`_getPowerMeter${index}HttpStatus`] = getHttpStatus
 }
 
-const relay = (device, index, id) => {
+const relay = (device, index, id, disableHttpRoute = false) => {
   device[`_relay${index}Timeout`] = null
 
   device._defineProperty(`relay${index}`, id, false, Boolean)
@@ -43,6 +43,12 @@ const relay = (device, index, id) => {
   device[`_getRelay${index}HttpStatus`] = getHttpStatus
 
   device._httpRoutes.set(`/relay/${index}`, (req, res, next) => {
+    if (disableHttpRoute) {
+      res.send('Device mode is not relay!')
+      next()
+      return
+    }
+
     if (req.query && req.query.turn) {
       const turn = req.query.turn
       if (turn !== 'on' && turn !== 'off') {
