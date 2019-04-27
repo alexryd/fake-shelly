@@ -13,6 +13,14 @@ const opts = commandLineArgs([
 
 let device = null
 
+const banner = `
+ ____  __   __ _  ____      ____  _  _  ____  __    __    _  _
+(  __)/ _\\ (  / )(  __)___ / ___)/ )( \\(  __)(  )  (  )  ( \\/ )
+ ) _)/    \\ )  (  ) _)(___)\\___ \\) __ ( ) _) / (_/\\/ (_/\\ )  /
+(__) \\_/\\_/(__\\_)(____)    (____/\\_)(_/(____)\\____/\\____/(__/
+`
+console.log(banner)
+
 try {
   device = createDevice(
     opts.device.toUpperCase(),
@@ -23,7 +31,11 @@ try {
   return
 }
 
-console.log(`Simulating a ${device.type} with ID ${device.id}`)
+console.log('------------------------------')
+console.log('Type:', device.type)
+console.log('ID:', device.id)
+console.log('------------------------------')
+console.log('')
 
 const coapServer = new CoapServer(device)
 const httpServer = new HttpServer(device)
