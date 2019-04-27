@@ -75,15 +75,13 @@ class CoapServer extends EventEmitter {
   start() {
     this.device.on('change', this._deviceChangeHandler, this)
 
-    this._statusBroadcastTimeout = setTimeout(
-      this._broadcastStatus.bind(this),
-      15000
-    )
-
     return Promise.all([
       this._startServer(),
       this._startMulticastServer(),
     ])
+      .then(() => {
+        this._broadcastStatus()
+      })
       .catch(error => {
         this.stop()
         throw error
@@ -156,7 +154,7 @@ class CoapServer extends EventEmitter {
 
     this._statusBroadcastTimeout = setTimeout(
       this._broadcastStatus.bind(this),
-      15000
+      30000
     )
 
     const req = coap.request({
