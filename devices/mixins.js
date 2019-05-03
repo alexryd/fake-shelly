@@ -74,6 +74,79 @@ const relay = (device, index, id, disableHttpRoute = false) => {
   })
 }
 
+const rgbw = (device, redId, greenId, blueId, whiteId, gainId, switchId) => {
+  device._defineProperty('red', redId, 0, Number)
+  device._defineProperty('green', greenId, 0, Number)
+  device._defineProperty('blue', blueId, 0, Number)
+  device._defineProperty('white', whiteId, 0, Number)
+  device._defineProperty('gain', gainId, 0, Number)
+  device._defineProperty('switch', switchId, false, Boolean)
+
+  const getHttpStatus = () => {
+    return {
+      ison: device.switch,
+      red: device.red,
+      green: device.green,
+      blue: device.blue,
+      white: device.white,
+      gain: device.gain,
+    }
+  }
+  device[`_getRgbHttpStatus`] = getHttpStatus
+
+  device._httpRoutes.set('/color/0', (req, res, next) => {
+    if (req.query) {
+      const turn = req.query.turn
+      const red = req.query.red
+      const green = req.query.green
+      const blue = req.query.blue
+      const white = req.query.white
+      const gain = req.query.gain
+
+      if (turn !== undefined) {
+        if (turn !== 'on' && turn !== 'off') {
+          throw new Error('turn must be "on" or "off"')
+        }
+        device.switch = turn === 'on'
+      }
+
+      if (red !== undefined) {
+        if (isNaN(Number(red))) {
+          throw new Error('red must be a number')
+        }
+        device.red = Math.max(Math.min(Math.round(red), 255), 0)
+      }
+      if (green !== undefined) {
+        if (isNaN(Number(green))) {
+          throw new Error('green must be a number')
+        }
+        device.green = Math.max(Math.min(Math.round(green), 255), 0)
+      }
+      if (blue !== undefined) {
+        if (isNaN(Number(blue))) {
+          throw new Error('blue must be a number')
+        }
+        device.blue = Math.max(Math.min(Math.round(blue), 255), 0)
+      }
+      if (white !== undefined) {
+        if (isNaN(Number(white))) {
+          throw new Error('white must be a number')
+        }
+        device.white = Math.max(Math.min(Math.round(white), 255), 0)
+      }
+      if (gain !== undefined) {
+        if (isNaN(Number(gain))) {
+          throw new Error('gain must be a number')
+        }
+        device.gain = Math.max(Math.min(Math.round(gain), 100), 0)
+      }
+    }
+
+    res.send(getHttpStatus())
+    next()
+  })
+}
+
 const roller = (device, id) => {
   device._rollerState = 'stop'
   device._rollerPositionInterval = null
@@ -185,8 +258,48 @@ const roller = (device, id) => {
   })
 }
 
+const whiteLight = (device, index, brightnessId, switchId) => {
+  device._defineProperty(`brightness${index}`, brightnessId, 0, Number)
+  device._defineProperty(`switch${index}`, switchId, false, Boolean)
+
+  const getHttpStatus = () => {
+    return {
+      ison: device[`switch${index}`],
+      brightness: device[`brightness${index}`],
+    }
+  }
+  device[`_getWhiteLight${index}HttpStatus`] = getHttpStatus
+
+  device._httpRoutes.set(`/white/${index}`, (req, res, next) => {
+    if (req.query) {
+      const turn = req.query.turn
+      const brightness = req.query.brightness
+
+      if (turn !== undefined) {
+        if (turn !== 'on' && turn !== 'off') {
+          throw new Error('turn must be "on" or "off"')
+        }
+        device[`switch${index}`] = turn === 'on'
+      }
+
+      if (brightness !== undefined) {
+        if (isNaN(Number(brightness))) {
+          throw new Error('brightness must be a number')
+        }
+        device[`brightness${index}`] =
+          Math.max(Math.min(Math.round(brightness), 100), 0)
+      }
+    }
+
+    res.send(getHttpStatus())
+    next()
+  })
+}
+
 module.exports = {
   powerMeter,
   relay,
+  rgbw,
   roller,
+  whiteLight,
 }

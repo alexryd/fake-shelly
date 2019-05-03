@@ -8,6 +8,8 @@ const Shelly4Pro = require('./shsw-44')
 const ShellyHT = require('./shht')
 const ShellyPlug = require('./shplg-1')
 const ShellyPlugS = require('./shplg2-1')
+const ShellyRGBW2Color = require('./shrgbw2-color')
+const ShellyRGBW2White = require('./shrgbw2-white')
 const ShellySense = require('./shsen-1')
 
 const createDevice = (type, id) => {
@@ -18,6 +20,11 @@ const createDevice = (type, id) => {
       return new ShellyPlug(id)
     case 'SHPLG2-1':
       return new ShellyPlugS(id)
+    case 'SHRGBW2':
+    case 'SHRGBW2-COLOR':
+      return new ShellyRGBW2Color(id)
+    case 'SHRGBW2-WHITE':
+      return new ShellyRGBW2White(id)
     case 'SHSEN-1':
       return new ShellySense(id)
     case 'SHSW-1':
@@ -53,5 +60,7 @@ module.exports = {
   ShellyHT,
   ShellyPlug,
   ShellyPlugS,
+  ShellyRGBW2Color,
+  ShellyRGBW2White,
   ShellySense,
 }
