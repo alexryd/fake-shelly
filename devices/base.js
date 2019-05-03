@@ -48,6 +48,10 @@ class Device extends EventEmitter {
     const updates = []
 
     for (const [id, name] of this._props.entries()) {
+      if (id < 0) {
+        continue
+      }
+
       let val = this[name]
       if (typeof val === 'boolean') {
         val = Number(val)
