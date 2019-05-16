@@ -3,7 +3,7 @@ const mixins = require('./mixins')
 
 class ShellyPlugS extends Device {
   constructor(id) {
-    super('SHPLG2-1', id)
+    super('SHPLG-S', id)
 
     mixins.powerMeter(this, 0, 111)
     mixins.relay(this, 0, 112)

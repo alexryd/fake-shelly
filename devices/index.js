@@ -9,7 +9,7 @@ const ShellyBulb = require('./shblb-1')
 const ShellyHD = require('./shsw-22')
 const ShellyHT = require('./shht')
 const ShellyPlug = require('./shplg-1')
-const ShellyPlugS = require('./shplg2-1')
+const ShellyPlugS = require('./shplg-s')
 const ShellyRGBW2Color = require('./shrgbw2-color')
 const ShellyRGBW2White = require('./shrgbw2-white')
 const ShellySense = require('./shsen-1')
@@ -21,8 +21,9 @@ const createDevice = (type, id) => {
     case 'SHHT-1':
       return new ShellyHT(id)
     case 'SHPLG-1':
-      return new ShellyPlug(id)
     case 'SHPLG2-1':
+      return new ShellyPlug(id)
+    case 'SHPLG-S':
       return new ShellyPlugS(id)
     case 'SHRGBW2':
     case 'SHRGBW2-COLOR':

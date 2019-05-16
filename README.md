@@ -9,6 +9,7 @@ Available device types are:
 * SHBLB-1
 * SHHT-1
 * SHPLG-1
+* SHPLG-S
 * SHPLG2-1
 * SHRGBW2-color
 * SHRGBW2-white
