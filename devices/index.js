@@ -7,6 +7,7 @@ const Shelly25Roller = require('./shsw-25-roller.js')
 const Shelly4Pro = require('./shsw-44')
 const ShellyBulb = require('./shblb-1')
 const ShellyEM = require('./shem')
+const ShellyFlood = require('./shwt-1')
 const ShellyHD = require('./shsw-22')
 const ShellyHT = require('./shht')
 const ShellyPlug = require('./shplg-1')
@@ -53,6 +54,8 @@ const createDevice = (type, id) => {
       return new Shelly25Roller(id)
     case 'SHSW-44':
       return new Shelly4Pro(id)
+    case 'SHWT-1':
+      return new ShellyFlood(id)
     default:
       throw new Error(`Unknown device type "${type}"`)
   }
@@ -69,6 +72,7 @@ module.exports = {
   Shelly4Pro,
   ShellyBulb,
   ShellyEM,
+  ShellyFlood,
   ShellyHD,
   ShellyHT,
   ShellyPlug,
