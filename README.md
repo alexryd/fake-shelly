@@ -8,6 +8,7 @@ Clone this repository, then run `$ bin/fake-shelly <device-type>`.
 Available device types are:
 * SHBLB-1
 * SHDM-1
+* SHEM
 * SHHT-1
 * SHPLG-1
 * SHPLG-S
@@ -22,3 +23,4 @@ Available device types are:
 * SHSW-25
 * SHSW-25-roller
 * SHSW-44
+* SHWT-1
