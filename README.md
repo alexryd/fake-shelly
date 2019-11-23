@@ -7,6 +7,7 @@ Clone this repository, then run `$ bin/fake-shelly <device-type>`.
 
 Available device types are:
 * SHBLB-1
+* SHDM-1
 * SHHT-1
 * SHPLG-1
 * SHPLG-S

@@ -6,6 +6,7 @@ const Shelly25Relay = require('./shsw-25-relay.js')
 const Shelly25Roller = require('./shsw-25-roller.js')
 const Shelly4Pro = require('./shsw-44')
 const ShellyBulb = require('./shblb-1')
+const ShellyDimmer = require('./shdm-1')
 const ShellyEM = require('./shem')
 const ShellyFlood = require('./shwt-1')
 const ShellyHD = require('./shsw-22')
@@ -20,6 +21,8 @@ const createDevice = (type, id) => {
   switch (type) {
     case 'SHBLB-1':
       return new ShellyBulb(id)
+    case 'SHDM-1':
+      return new ShellyDimmer(id)
     case 'SHEM':
       return new ShellyEM(id)
     case 'SHHT-1':
@@ -71,6 +74,7 @@ module.exports = {
   Shelly25Roller,
   Shelly4Pro,
   ShellyBulb,
+  ShellyDimmer,
   ShellyEM,
   ShellyFlood,
   ShellyHD,
