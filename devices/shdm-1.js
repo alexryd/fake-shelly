@@ -5,7 +5,7 @@ class ShellyDimmer extends Device {
   constructor(id) {
     super('SHDM-1', id)
 
-    mixins.whiteLight(this, 0, 111, 121)
+    mixins.whiteLight(this, 0, 111, 121, '/light/')
   }
 
   _getHttpSettings() {

@@ -258,7 +258,7 @@ const roller = (device, id) => {
   })
 }
 
-const whiteLight = (device, index, brightnessId, switchId) => {
+const whiteLight = (device, index, brightnessId, switchId, uri = '/white/') => {
   device._defineProperty(`brightness${index}`, brightnessId, 0, Number)
   device._defineProperty(`switch${index}`, switchId, false, Boolean)
 
@@ -270,7 +270,7 @@ const whiteLight = (device, index, brightnessId, switchId) => {
   }
   device[`_getWhiteLight${index}HttpStatus`] = getHttpStatus
 
-  device._httpRoutes.set(`/white/${index}`, (req, res, next) => {
+  device._httpRoutes.set(`${uri}${index}`, (req, res, next) => {
     if (req.query) {
       const turn = req.query.turn
       const brightness = req.query.brightness
