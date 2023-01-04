@@ -19,9 +19,9 @@
     "url": "https://github.com/alexryd/fake-shelly.git"
   },
   "dependencies": {
-    "coap": "^0.22.0",
-    "command-line-args": "^5.1.1",
-    "eventemitter3": "^3.1.0",
-    "restify": "^8.4.0"
+    "coap": "^1.2.2",
+    "command-line-args": "^5.2.1",
+    "eventemitter3": "^5.0.0",
+    "restify": "^10.0.0"
   }
 }
